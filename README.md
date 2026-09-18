@@ -6,9 +6,22 @@ Aplikasi chatbot asisten akademik fisika interaktif berbasis web yang menghubung
 
 ---
 
+## Tangkapan Layar (Screenshots UI)
+
+Berikut adalah tampilan antarmuka web Phystor:
+
+### 1. Halaman Utama (Welcome State & Rekomendasi Topik)
+![Tampilan Utama Phystor](docs/screenshots/tampilan-utama.png)
+
+### 2. Sesi Tanya Jawab & Render Rumus Fisika (LaTeX + Markdown)
+![Tampilan Chat Phystor](docs/screenshots/tampilan-chat.png)
+
+---
+
 ## Fitur Utama
 
 - **Percakapan Multi-turn:** Menyimpan riwayat obrolan (dialog state) antara pengguna dan asisten agar percakapan tetap kontekstual.
+- **Rendering Formula Fisika Visual:** Terintegrasi dengan pustaka KaTeX untuk menampilkan notasi dan persamaan matematika LaTeX secara rapi, jelas, dan presisi.
 - **Konfigurasi Parameter Khusus:**
   - `temperature: 0.3` untuk menjaga akurasi faktual rumus ilmiah dan meminimalisasi halusinasi.
   - `top_p: 0.85` dan `top_k: 40` untuk menjaga variasi bahasa tetap natural dan terarah.
@@ -27,8 +40,9 @@ Aplikasi chatbot asisten akademik fisika interaktif berbasis web yang menghubung
   - `@google/genai` (SDK resmi Google Gemini)
   - `cors` & `dotenv`
 - **Frontend:**
-  - HTML5 & CSS3 (Desain antarmuka bersih dan minimalis)
-  - Vanilla JavaScript (Fetch API asynchronous, DOM manipulation, formatting rumus)
+  - HTML5 & CSS3 (Desain antarmuka bersih, responsif, dan minimalis)
+  - Vanilla JavaScript (Fetch API asynchronous, DOM manipulation)
+  - KaTeX & Marked (Rendering visual rumus fisika LaTeX dan tipografi Markdown)
 
 ---
 
