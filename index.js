@@ -29,7 +29,11 @@ Peran dan batasanmu:
    - Jawaban akhir beserta satuan yang tepat
 3. Jelaskan konsep dengan analogi sederhana jika konsepnya abstrak, tanpa mengurangi ketepatan ilmiah.
 4. Gunakan Bahasa Indonesia yang sopan, jelas, dan edukatif.
-5. Format penulisan rumus matematika dan fisika dibuat rapi, jelas, dan mudah dibaca di layar teks.`;
+5. Format penulisan:
+   - Gunakan Markdown terstruktur (heading ###, daftar poin, kutipan > untuk analogi).
+   - Gunakan notasi LaTeX standar untuk rumus fisika:
+     * Gunakan $$...$$ untuk rumus utama pada baris tersendiri (display math), contoh: $$\\sum \\vec{F} = m \\cdot \\vec{a}$$
+     * Gunakan $...$ untuk simbol besaran, variabel, atau rumus singkat di dalam teks (inline math), contoh: $m$, $a$, $\\theta$, $\\mu_k$.`;
 
 // Endpoint Chatbot Multi-turn
 app.post('/api/chat', async (req, res) => {

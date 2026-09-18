@@ -18,34 +18,58 @@ function escapeHtml(text) {
   return div.innerHTML;
 }
 
-// Simple parser markdown ringan untuk merender format teks akademis/rumus
-function renderFormattedText(text) {
-  if (!text) return '';
+// Parser render Markdown dan LaTeX Matematika/Fisika
+function renderMessageInto(container, text) {
+  if (!text) {
+    container.innerHTML = '';
+    return;
+  }
 
-  let html = escapeHtml(text);
+  if (window.marked && typeof window.marked.parse === 'function') {
+    // 1. Lindungi ekspresi matematika LaTeX ($$...$$ dan $...$) dari parser markdown
+    // agar karakter _, *, dll. dalam rumus tidak terpecah
+    const mathTokens = [];
+    const protectedText = text.replace(/(\$\$[\s\S]*?\$\$|\$(?!\$)[^\n]+?\$)/g, (match) => {
+      const placeholder = `%%PHYSMATH_${mathTokens.length}%%`;
+      mathTokens.push(match);
+      return placeholder;
+    });
 
-  // Render blok kode / rumus (```rumus```)
-  html = html.replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>');
+    // 2. Parse markdown terstruktur
+    let parsedHtml = window.marked.parse(protectedText, { breaks: true, gfm: true });
 
-  // Render inline code (`E = mc^2`)
-  html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
+    // 3. Pulihkan kembali ekspresi matematika asli
+    mathTokens.forEach((math, i) => {
+      parsedHtml = parsedHtml.replace(`%%PHYSMATH_${i}%%`, math);
+    });
 
-  // Render bold (**teks**)
-  html = html.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+    container.innerHTML = parsedHtml;
+  } else {
+    // Fallback jika pustaka marked tidak tersedia
+    let html = escapeHtml(text);
+    html = html.replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>');
+    html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
+    html = html.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+    html = html.replace(/\*([^*]+)\*/g, '<em>$1</em>');
+    container.innerHTML = html.replace(/\n/g, '<br>');
+  }
 
-  // Render italic (*teks*)
-  html = html.replace(/\*([^*]+)\*/g, '<em>$1</em>');
-
-  // Render baris baru (\n) menjadi <br> kecuali dalam tag <pre>
-  const parts = html.split(/(<pre>[\s\S]*?<\/pre>)/);
-  for (let i = 0; i < parts.length; i++) {
-    if (!parts[i].startsWith('<pre>')) {
-      parts[i] = parts[i].replace(/\n/g, '<br>');
+  // 4. Render formula matematika dengan KaTeX
+  if (window.renderMathInElement) {
+    try {
+      window.renderMathInElement(container, {
+        delimiters: [
+          { left: '$$', right: '$$', display: true },
+          { left: '$', right: '$', display: false },
+          { left: '\\(', right: '\\)', display: false },
+          { left: '\\[', right: '\\]', display: true },
+        ],
+        throwOnError: false,
+      });
+    } catch (e) {
+      console.warn('Gagal merender notasi LaTeX dengan KaTeX:', e);
     }
   }
-  html = parts.join('');
-
-  return html;
 }
 
 // Fungsi membuat dan menambahkan elemen pesan ke dalam chat box
@@ -73,8 +97,10 @@ function appendMessage(sender, text, isTemporary = false) {
       </div>
     `;
     messageWrapper.id = 'temp-bot-message';
+  } else if (sender === 'user') {
+    bubble.textContent = text;
   } else {
-    bubble.innerHTML = renderFormattedText(text);
+    renderMessageInto(bubble, text);
   }
 
   messageWrapper.appendChild(label);
@@ -135,8 +161,8 @@ async function handleSendMessage(userMessage) {
     if (tempMessage) {
       const bubble = tempMessage.querySelector('.bubble');
       if (data && data.result) {
-        // Ganti placeholder dengan jawaban dari Gemini
-        bubble.innerHTML = renderFormattedText(data.result);
+        // Ganti placeholder dengan jawaban dari Gemini (didukung Markdown & KaTeX)
+        renderMessageInto(bubble, data.result);
         tempMessage.removeAttribute('id');
 
         // Simpan jawaban asisten ke riwayat percakapan
