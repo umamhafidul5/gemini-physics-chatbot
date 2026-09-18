@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FisikaBot - Asisten Akademik Fisika</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-container">
+    <header class="chat-header">
+      <div class="header-info">
+        <h1>FisikaBot</h1>
+        <p>Asisten Akademik & Diskusi Konsep Fisika</p>
+      </div>
+      <div class="header-actions">
+        <span class="status-badge"><span class="status-dot"></span> Online</span>
+        <button id="clear-btn" type="button" title="Bersihkan obrolan">Reset Chat</button>
+      </div>
+    </header>
+
+    <main class="chat-main">
+      <div id="chat-box" class="chat-box">
+        <div class="welcome-card" id="welcome-card">
+          <h2>Selamat Datang di FisikaBot</h2>
+          <p>
+            Platform asisten akademik untuk siswa, mahasiswa, dan akademisi dalam mempelajari konsep fisika,
+            penurunan rumus, serta langkah penyelesaian soal secara sistematis.
+          </p>
+          <div class="suggestion-group">
+            <span class="suggestion-title">Contoh topik yang bisa kamu tanyakan:</span>
+            <div class="suggestion-chips">
+              <button type="button" class="chip" data-prompt="Jelaskan konsep Hukum II Newton dan contoh penerapannya pada bidang miring kasar.">Hukum II Newton &amp; Bidang Miring</button>
+              <button type="button" class="chip" data-prompt="Bagaimana cara menurunkan rumus kecepatan sesaat dan jarak tempuh pada GLBB?">Penurunan Rumus GLBB</button>
+              <button type="button" class="chip" data-prompt="Jelaskan prinsip kerja Efek Doppler pada gelombang bunyi beserta rumus pergeseran frekuensinya.">Efek Doppler Gelombang Bunyi</button>
+              <button type="button" class="chip" data-prompt="Sebuah mesin Carnot beroperasi antara reservoir 600 K dan 300 K. Hitung efisiensi mesin tersebut beserta langkahnya.">Soal Efisiensi Mesin Carnot</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer class="chat-footer">
+      <form id="chat-form" class="chat-form">
+        <input
+          type="text"
+          id="user-input"
+          placeholder="Ketik pertanyaan atau permasalahan fisika di sini..."
+          autocomplete="off"
+          required
+        />
+        <button type="submit" id="send-btn">Kirim</button>
+      </form>
+      <div class="footer-meta">
+        <span>FisikaBot &bull; Google Gemini 2.5 Flash API</span>
+      </div>
+    </footer>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
