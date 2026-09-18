@@ -1,7 +1,7 @@
 {
   "name": "gemini-physics-chatbot",
   "version": "1.0.0",
-  "description": "Chatbot asisten akademik fisika berbasis Express.js dan Google Gemini API",
+  "description": "Phystor - Chatbot asisten akademik fisika berbasis Express.js dan Google Gemini API",
   "main": "index.js",
   "type": "module",
   "scripts": {

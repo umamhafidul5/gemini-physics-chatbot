@@ -60,7 +60,7 @@ function appendMessage(sender, text, isTemporary = false) {
 
   const label = document.createElement('span');
   label.classList.add('sender-label');
-  label.textContent = sender === 'user' ? 'Anda' : 'FisikaBot';
+  label.textContent = sender === 'user' ? 'Anda' : 'Phystor';
 
   const bubble = document.createElement('div');
   bubble.classList.add('bubble');

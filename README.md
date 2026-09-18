@@ -1,8 +1,8 @@
-# gemini-physics-chatbot
+# Phystor - Asisten Akademik Fisika
 
 Aplikasi chatbot asisten akademik fisika interaktif berbasis web yang menghubungkan antarmuka Vanilla JavaScript dengan backend Express.js dan model Google Gemini AI (`gemini-3.6-flash`). Proyek ini dibuat untuk tugas hands-on Sesi 3 program Hacktiv8 AI Developer.
 
-Aplikasi ini ditujukan bagi siswa, mahasiswa, dan akademisi untuk mempermudah pemahaman konsep fisika, penurunan rumus, serta langkah penyelesaian soal secara terstruktur dan bertahap.
+**Phystor** (*Physics + Tutor*) ditujukan bagi siswa, mahasiswa, dan akademisi untuk mempermudah pemahaman konsep fisika, penurunan rumus, serta langkah penyelesaian soal secara terstruktur dan bertahap.
 
 ---
 

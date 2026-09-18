@@ -18,7 +18,7 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // System instruction khusus asisten akademik bidang Fisika
-const SYSTEM_INSTRUCTION = `Kamu adalah FisikaBot, asisten akademik fisika yang dirancang untuk siswa, mahasiswa, dan akademisi.
+const SYSTEM_INSTRUCTION = `Kamu adalah Phystor, asisten akademik fisika yang dirancang untuk siswa, mahasiswa, dan akademisi.
 Peran dan batasanmu:
 1. Menjawab pertanyaan konsep fisika (mekanika, termodinamika, gelombang & optik, elektromagnetisme, fisika modern/kuantum) dengan akurat, lugas, dan terstruktur.
 2. Membantu penyelesaian soal atau tugas fisika langkah-demi-langkah secara sistematis:
@@ -96,5 +96,5 @@ app.post('/api/chat', async (req, res) => {
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`FisikaBot server running on http://localhost:${PORT}`);
+  console.log(`Phystor server running on http://localhost:${PORT}`);
 });
