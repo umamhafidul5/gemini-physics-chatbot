@@ -236,6 +236,7 @@ chips.forEach((chip) => {
 const resetModal = document.getElementById('reset-modal');
 const modalCancelBtn = document.getElementById('modal-cancel-btn');
 const modalConfirmBtn = document.getElementById('modal-confirm-btn');
+const modalCloseIcon = document.getElementById('modal-close-icon');
 
 function openResetModal() {
   if (!resetModal) return;
@@ -257,8 +258,11 @@ clearBtn.addEventListener('click', () => {
   openResetModal();
 });
 
-// Tutup modal jika tombol Batal diklik
+// Tutup modal jika tombol Batal atau tombol silang diklik
 modalCancelBtn.addEventListener('click', closeResetModal);
+if (modalCloseIcon) {
+  modalCloseIcon.addEventListener('click', closeResetModal);
+}
 
 // Tutup modal jika pengguna klik area latar belakang (overlay)
 resetModal.addEventListener('click', (e) => {

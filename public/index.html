@@ -66,24 +66,36 @@
   <!-- Modal Konfirmasi Reset Chat -->
   <div id="reset-modal" class="modal-overlay" style="display: none;" role="dialog" aria-modal="true" aria-labelledby="modal-title">
     <div class="modal-card">
-      <div class="modal-header">
-        <div class="modal-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="1 4 1 10 7 10"></polyline>
-            <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
+      <button type="button" id="modal-close-icon" class="modal-close-btn" aria-label="Tutup modal">&times;</button>
+      
+      <div class="modal-top">
+        <div class="modal-icon-badge">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 6h18"></path>
+            <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+            <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
           </svg>
         </div>
-        <div class="modal-heading">
-          <h3 id="modal-title" class="modal-title">Mulai Sesi Baru?</h3>
-          <p class="modal-subtitle">Diskusi saat ini akan dibersihkan</p>
+        <div class="modal-text-content">
+          <h3 id="modal-title" class="modal-title">Reset Percakapan?</h3>
+          <p class="modal-desc">
+            Sesi obrolan dan seluruh pembahasan rumus fisika saat ini akan dibersihkan dari layar dan kembali ke tampilan awal.
+          </p>
         </div>
       </div>
-      <div class="modal-body">
-        Seluruh riwayat pertanyaan, pembahasan langkah, dan rumus fisika yang ada di layar akan dibersihkan. Apakah Anda ingin memulai kembali dari awal?
+
+      <div class="modal-alert-box">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="8" x2="12" y2="12"></line>
+          <line x1="12" y1="16" x2="12.01" y2="16"></line>
+        </svg>
+        <span>Percakapan yang telah dibersihkan tidak dapat dipulihkan kembali.</span>
       </div>
+
       <div class="modal-actions">
         <button type="button" id="modal-cancel-btn" class="modal-btn btn-secondary">Batal</button>
-        <button type="button" id="modal-confirm-btn" class="modal-btn btn-danger">Ya, Reset Chat</button>
+        <button type="button" id="modal-confirm-btn" class="modal-btn btn-danger">Hapus &amp; Mulai Baru</button>
       </div>
     </div>
   </div>
