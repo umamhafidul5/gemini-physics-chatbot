@@ -59,13 +59,17 @@ app.post('/api/chat', async (req, res) => {
       };
     });
 
-    // Helper panggil Gemini dengan retry otomatis bila ada lonjakan traffic (503/429)
+    // Daftar model alternatif untuk fallback otomatis jika terjadi quota exceed (429)
+    const modelsToTry = [GEMINI_MODEL, 'gemini-3.5-flash-lite', 'gemini-3.6-flash']
+      .filter((v, i, a) => a.indexOf(v) === i);
+
     let response = null;
     let lastError = null;
-    for (let attempt = 1; attempt <= 3; attempt++) {
+
+    for (const currentModel of modelsToTry) {
       try {
         response = await ai.models.generateContent({
-          model: GEMINI_MODEL,
+          model: currentModel,
           contents,
           config: {
             temperature: 0.3, // Rendah agar jawaban faktual, presisi, dan konsisten untuk rumus fisika
@@ -74,17 +78,25 @@ app.post('/api/chat', async (req, res) => {
             systemInstruction: SYSTEM_INSTRUCTION,
           },
         });
-        break;
+        if (response?.text) {
+          break; // Berhasil mendapatkan respons
+        }
       } catch (err) {
         lastError = err;
-        const isTemporary = err.status === 503 || err.status === 429 || (err.message && err.message.includes('503'));
-        if (isTemporary && attempt < 3) {
-          console.warn(`[Gemini API] Trafik tinggi (percobaan ${attempt}/3), mencoba kembali dalam 1.5 detik...`);
-          await new Promise((resolve) => setTimeout(resolve, 1500));
+        const isQuotaExceeded = err.status === 429 || (err.message && err.message.includes('429'));
+        if (isQuotaExceeded && currentModel !== modelsToTry[modelsToTry.length - 1]) {
+          console.warn(`[Gemini API] Kuota pada ${currentModel} habis, otomatis beralih ke model alternatif...`);
           continue;
         }
-        throw err;
+        // Jika 503 lonjakan trafik, tunggu 1.5 detik
+        if (err.status === 503 || (err.message && err.message.includes('503'))) {
+          await new Promise((r) => setTimeout(r, 1500));
+        }
       }
+    }
+
+    if (!response && lastError) {
+      throw lastError;
     }
 
     const resultText = response?.text || 'Maaf, tidak ada respons yang dihasilkan.';
