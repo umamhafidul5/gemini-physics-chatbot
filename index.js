@@ -91,10 +91,26 @@ app.post('/api/chat', async (req, res) => {
     res.status(200).json({ result: resultText });
   } catch (error) {
     console.error('Error in /api/chat:', error);
-    const friendlyMsg = error.status === 503
-      ? 'Layanan AI sedang mengalami lonjakan trafik tinggi saat ini. Silakan coba kirim ulang pertanyaan Anda dalam beberapa saat.'
-      : (error.message || 'Terjadi kesalahan pada server saat memproses permintaan.');
-    res.status(500).json({ error: friendlyMsg });
+
+    const rawMsg = error?.message || '';
+    let friendlyMsg = 'Terjadi kendala pada server saat memproses jawaban. Silakan coba lagi.';
+
+    // 1. Tangani 429 Quota Exceeded / Rate Limit
+    if (error.status === 429 || rawMsg.includes('429') || rawMsg.includes('RESOURCE_EXHAUSTED') || rawMsg.includes('Quota exceeded')) {
+      const matchSeconds = rawMsg.match(/retry in\s+([0-9.]+)\s*s/i) || rawMsg.match(/retryDelay":"?(\d+)/i);
+      const waitTime = matchSeconds ? `${Math.ceil(parseFloat(matchSeconds[1]))} detik` : '1-2 menit';
+      friendlyMsg = `Batas kuota gratis Gemini API telah tercapai (limit 20 request/hari pada key ini). Silakan tunggu sekitar ${waitTime} sebelum mengirim pesan lagi, atau gunakan API Key dengan kuota aktif di Google AI Studio.`;
+    }
+    // 2. Tangani 503 Service Unavailable / High Demand
+    else if (error.status === 503 || rawMsg.includes('503') || rawMsg.includes('UNAVAILABLE') || rawMsg.includes('high demand')) {
+      friendlyMsg = 'Layanan Gemini AI sedang mengalami lonjakan trafik tinggi dari server Google. Silakan coba kirim ulang pertanyaan dalam beberapa saat.';
+    }
+    // 3. Tangani 401/403 Invalid API Key
+    else if (error.status === 401 || error.status === 403 || rawMsg.includes('API_KEY_INVALID')) {
+      friendlyMsg = 'API Key Gemini tidak valid atau tidak memiliki izin akses. Harap periksa file .env.';
+    }
+
+    res.status(error.status || 500).json({ error: friendlyMsg });
   }
 });
 

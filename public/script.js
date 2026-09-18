@@ -177,8 +177,33 @@ async function handleSendMessage(userMessage) {
     const tempMessage = document.getElementById('temp-bot-message');
     if (tempMessage) {
       const bubble = tempMessage.querySelector('.bubble');
-      bubble.textContent = `Terjadi kesalahan: ${error.message || 'Gagal menghubungi server.'}`;
-      bubble.style.color = '#b91c1c';
+      let displayMessage = error.message || 'Gagal menghubungi server.';
+
+      // Deteksi jika error message berupa stringified JSON dari API
+      try {
+        const jsonMatch = displayMessage.match(/\{[\s\S]*\}/);
+        if (jsonMatch) {
+          const parsed = JSON.parse(jsonMatch[0]);
+          if (parsed.error) {
+            if (typeof parsed.error === 'object' && parsed.error.message) {
+              if (parsed.error.code === 429 || parsed.error.status === 'RESOURCE_EXHAUSTED') {
+                displayMessage = 'Batas kuota gratis Gemini API telah tercapai (limit 20 request/hari pada key ini). Silakan tunggu sekitar 1 menit sebelum mengirim pesan lagi, atau gunakan API key dengan kuota aktif.';
+              } else {
+                displayMessage = parsed.error.message;
+              }
+            } else if (typeof parsed.error === 'string') {
+              displayMessage = parsed.error;
+            }
+          }
+        }
+      } catch (_) {}
+
+      bubble.innerHTML = `
+        <div class="error-notice">
+          <div class="error-notice-title">Pemberitahuan Layanan</div>
+          <div class="error-notice-desc">${escapeHtml(displayMessage)}</div>
+        </div>
+      `;
       tempMessage.removeAttribute('id');
     }
   } finally {
