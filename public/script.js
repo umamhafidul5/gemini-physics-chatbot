@@ -232,12 +232,51 @@ chips.forEach((chip) => {
   });
 });
 
-// Event listener reset chat
-clearBtn.addEventListener('click', () => {
-  if (conversationHistory.length === 0) return;
+// Inisialisasi elemen modal reset
+const resetModal = document.getElementById('reset-modal');
+const modalCancelBtn = document.getElementById('modal-cancel-btn');
+const modalConfirmBtn = document.getElementById('modal-confirm-btn');
 
-  const confirmReset = confirm('Apakah Anda yakin ingin memulai sesi percakapan baru? Riwayat chat saat ini akan dibersihkan.');
-  if (!confirmReset) return;
+function openResetModal() {
+  if (!resetModal) return;
+  resetModal.style.display = 'flex';
+}
+
+function closeResetModal() {
+  if (!resetModal) return;
+  resetModal.style.display = 'none';
+}
+
+// Buka modal saat tombol Reset Chat diklik
+clearBtn.addEventListener('click', () => {
+  // Hanya buka modal jika ada riwayat obrolan yang perlu dibersihkan
+  if (conversationHistory.length === 0) {
+    input.focus();
+    return;
+  }
+  openResetModal();
+});
+
+// Tutup modal jika tombol Batal diklik
+modalCancelBtn.addEventListener('click', closeResetModal);
+
+// Tutup modal jika pengguna klik area latar belakang (overlay)
+resetModal.addEventListener('click', (e) => {
+  if (e.target === resetModal) {
+    closeResetModal();
+  }
+});
+
+// Tutup modal jika pengguna menekan tombol Escape di keyboard
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && resetModal && resetModal.style.display === 'flex') {
+    closeResetModal();
+  }
+});
+
+// Jalankan reset jika dikonfirmasi
+modalConfirmBtn.addEventListener('click', () => {
+  closeResetModal();
 
   // Reset state dan DOM
   conversationHistory = [];
@@ -251,3 +290,4 @@ clearBtn.addEventListener('click', () => {
   input.value = '';
   input.focus();
 });
+
